@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Асистенты</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a class="active_menu" href="asystents.html">Асистенты |</a></li>
+				<li><a href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a href="notes.html">Заметки |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		<div id="doctors">  
+			<ol></ol>
+		</div>
+		<div>
+			<button id="add">Добавить асистента</button>
+		</div>
+		<br>
+		<hr>
+		<br>
+		<div id="duty">
+			<div class="duty_head">
+				<h3>Асистенты на смене</h3>
+				<p>
+					<input type="date" id="dateSearch">
+					<select id="asistent_list"></select>
+					<button id="add_asistent"> + </button>
+				</p>
+			</div>
+			<div class="duty_main">
+				<ol id="duty_list">
+					
+				</ol>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+		var asystents;
+
+		var dateSearch = d.getElementById('dateSearch'); // поле с датой для поиска
+       	var y = new Date().getFullYear();
+		var m = + new Date().getMonth() +1;
+		var day = + new Date().getDate();
+		var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); // дата сегодняшнего дня
+		dateSearch.value = curentData;
+		
+		
+		window.addEventListener('load', asystantPage);
+
+		function asystantPage(e) {
+		   $.ajax({
+		        url: 'php/asystents/getAsystents.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        async: false,
+		        data: {key: 'value'}
+		        ,
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		            asystents = response;
+		            // console.log(asystents);
+		            var ul = d.createElement('ul');
+		            var vivod = d.querySelector('#doctors ol');
+		            var vstavka = '';
+		            for (var i = 0; i < response.length; i++) {
+		                vstavka += '<li class="patient" data-id = "'+ response[i]['id'] +'" data-nth =' +  i +'>'+ response[i]['asystent']+'</li>';
+		            }
+		            vivod.innerHTML = vstavka;
+		            var patients_list = d.getElementsByClassName('patient');
+		            for (var f = 0; f<patients_list.length; f++){
+		                patients_list[f].addEventListener('click', function () {
+		                	if(prompt('введите пароль', '') === '654321Sl'){
+			                	var doctornth = (this.getAttribute('data-nth'));
+			                	var modal = new Modal(doctornth);
+								changeBtn(); //завести кнопки изменения данных
+								saveBtn(); //завести кнопки сохранения данных
+								deleteBtn();
+							}
+							else {
+								alert('пароль не верный');
+							}
+		                } );
+		            }
+		        }
+		    });
+			render();
+			asystentList();   
+		}
+
+		function changeBtn() {
+			var inputs = d.getElementById('patientData').elements;
+			var changeBtn = d.querySelector('input[name="change"]');
+			changeBtn.onclick = function (e) {
+				e.preventDefault();
+				if (prompt('Вы собираетесь удалить Асистента, для подтверждения введите в поле слово РЕДАКТИРОВАТЬ большими буквами', 'РЕДАКТИРОВАТЬ') === 'РЕДАКТИРОВАТЬ') {
+					for (var i = 0; i<inputs.length; i ++) {
+						if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+							inputs[i].disabled = false;
+						}
+					}
+				}
+			}
+		}
+
+		function  saveBtn() {
+			var newData = [];
+			var inputs = d.getElementById('patientData').elements;
+
+			var saveBtn = d.querySelector('input[name="save"]');
+			saveBtn.addEventListener('click', function (e) {
+				e.preventDefault();
+				for (var i = 0; i<inputs.length; i ++) {
+					if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+					    newData[i] = inputs[i].value;//	inputs[i].disabled = false;
+					}
+				}
+					// console.log(newData);
+			});
+			saveBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				$.ajax({
+			        url: 'php/asystents/setAsystents.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        async: false,
+			        data: {id: d.getElementById('patientData').getAttribute('data-id'), data: newData},
+			        beforeSend: function () {
+			        	console.log('ajax send');
+			        	// console.log(this.data);
+			        },
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            // console.log(response); //сделать popup
+			            alert('Запись изменена');
+			            d.getElementsByClassName('modal')[0].remove();
+			            asystantPage();
+			        	}
+			        });
+			    });
+		}
+
+		function  deleteBtn() {
+			var deleteBtn = d.querySelector('input[name="delete"]');
+			deleteBtn.addEventListener('click', function (e) {
+				e.preventDefault();
+				if (prompt('Вы собираетесь удалить асистента, для подтверждения введите в поле слово УДАЛИТЬ большими буквами', 'УДАЛИТЬ') === 'УДАЛИТЬ') {
+						$.ajax({
+				        url: 'php/asystents/deleteAsystents.php',
+				        type: 'POST',
+				        dataType: 'json',
+				        async: false,
+				        data: {id: d.getElementById('patientData').getAttribute('data-id')}  ,
+				        beforeSend: function () {
+				        	console.log('ajax send');
+				        	// console.log(this.data);
+				        },
+				        error: function (req, text, error) {
+				            console.log('Проблемма ' + text + error);
+				        },
+				        success: function (response) {
+				            // console.log(response); //сделать popup 
+				            d.getElementsByClassName('modal')[0].remove();
+				            asystantPage();
+			          	}
+			        });
+					}
+					else {
+						alert('ОТМЕНА УДАЛЕНИЯ ЗАПИСИ')
+					}		
+				});
+			}
+
+
+		function Modal(nth) {
+		    var element = d.createElement('div');
+		    element.className = ('modal');
+		    var show = function (){
+		        d.body.appendChild(element);
+				var userForm = d.getElementById('patientData');
+				var vivodDoctorData = '<h3>Асистент</h3><button id="close">close</button><form id="patientData"  data-id="'+ asystents[nth]['id']+'">';
+				vivodDoctorData += '<p hidden><span class="inputLabel">Id: </span><input id="asystentId" disabled type="text" value="' + asystents[nth]['id'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Фамилия: </span><input id="asystentName" disabled type="text" value="' + asystents[nth]['asystent'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Имя: </span><input disabled type="text" value="' + asystents[nth]['name'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Отчество: </span><input disabled type="text" value="' + asystents[nth]['second_name'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Дата роджения: </span><input disabled type="date" value="' + asystents[nth]['birthday'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Ставка за день: </span><input disabled type="text" value="' + asystents[nth]['stavka'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel"></span><input type="submit" value="Изменить" name="change"></p>';
+				vivodDoctorData += '<p><span class="inputLabel"></span><input type="submit" value="сохранить" name="save"></p>';
+				vivodDoctorData += '<p><span class="inputLabel"></span><input type="submit" value="удалить" name="delete"></p></form>'
+		        vivodDoctorData += '<div>\
+								<h3>Зарплата</h3>\
+								от / <input id="searchFrom" type="date"></input> до / <input id="searchTo" type="date"></input>\
+								<button id="showSalary">показать</button>\
+								<div id="salaryPanel">dhgdghdfgh </div>\
+							</div>';
+				element.innerHTML = vivodDoctorData;
+				var searchFrom = d.getElementById('searchFrom'); // поле с датой для поиска
+		        var searchTo = d.getElementById('searchTo'); // поле с датой для поиска
+				var y = new Date().getFullYear();
+				var m = + new Date().getMonth() +1;
+				var day = + new Date().getDate();
+				var startDate = y + '-' + ((m >=10) ? m : '0' + m) + '-01'; //дата начала текущего месяца
+				var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); // дата сегодняшнего дня
+				searchFrom.value = startDate;
+				searchTo.value = curentData;
+				//"2017-01-09" это формат даты в инпуте
+			}
+
+			var makeSalary = function (data){
+				var searchFrom = d.getElementById('searchFrom').value;
+				var searchTo = d.getElementById('searchTo').value;
+				var asystentId = d.getElementById('asystentId').value;
+				var asystent = d.getElementById('asystentName').value;
+				var showSalaryBtn = d.getElementById('showSalary');
+				var salaryPanel = d.getElementById('salaryPanel');
+				
+				showSalaryBtn.onclick = makeSalary;
+
+				$.ajax({
+			        url: 'php/asystents/getSalary_asystents.php ',
+			        type: 'POST',
+			        dataType: 'json',
+			        async: false,
+			        data: {'from' : searchFrom, 'to' : searchTo, 'asystentId' : asystentId}  ,
+			        beforeSend: function () {console.log('ajax send');},
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            console.log(response); //сделать popup 
+			            salaryPanel.innerHTML = '<div class="block salary"><p class="block-head">К-во смен</p><p id="totalSalery">'+ response.workingDaysCount +'</p></div>\
+		            							<div class="block payment"><p class="block-head">Зарплата</p><p id="totalPayment">'+ response.payment +'</p></div>\
+		            							<div class="block avans"><p class="block-head">Выдано</p><p id="avans_vivod">а тут авансы</p></div>';
+
+						var avans_vivod = d.getElementById('avans_vivod');
+						avans_vivod.innerHTML = '';
+						
+						for (var i = 0; i<response.avans.length; i++) {
+
+							avans_vivod.innerHTML += '<div>'
+							avans_vivod.innerHTML += '<div class="avans_size">'+response.avans[i]['avans'] +'</div>';
+							avans_vivod.innerHTML += '<div class="avans_data">'+response.avans[i]['date'] +'</div>';
+						}
+						avans_vivod.innerHTML += '<input type="text" value="0"><input type="date"><button id="addAvans">сохранить</button>'
+						
+						avans_vivod.innerHTML += '</div>'
+						salaryPanel.innerHTML += '<div class="block delta"><p class="block-head">Остаток</p><p id="totalResult">А тут разница</p></div>';
+						var totalPayment = +d.getElementById('totalPayment').innerHTML;
+						var avansList = d.getElementsByClassName('avans_size');
+						var totalAvas = 0;
+						for (var k = 0; k < avansList.length; k++) {
+							totalAvas += +avansList[k].innerHTML;
+						}
+						var totalResult = d.getElementById('totalResult');
+						totalResult.innerHTML = totalPayment - totalAvas;
+
+						var addAvansBtn = d.getElementById('addAvans');
+						addAvansBtn.onclick = function() {
+							var date = this.previousSibling;
+							var avans = this.previousSibling.previousSibling;
+							if (date.value === '' ) {
+								console.log('no data');
+								avans.style.border = '3px solid red';
+								date.style.border = '3px solid red';
+								return
+							}
+							else {
+								// console.log(typeof(date.value));
+							 // 	console.log(avans);
+
+							 	$.ajax({
+							        url: 'php/asystents/setAvans.php ',
+							        type: 'POST',
+							        dataType: 'json',
+							        async: false,
+							        data: {'avans' : avans.value, 'date' : date.value, 'asystent' : asystent, 'asystentId' : asystentId}  ,
+							        beforeSend: function () {
+							        	console.log('ajax send');
+							        },
+							        error: function (req, text, error) {
+							            console.log('Проблемма ' + text + error);
+							        },
+							        success: function (response) {
+							            console.log(response); //сделать popup 
+						          	}
+							    });
+							}
+							makeSalary();
+						}
+		          	}
+			    });
+			}
+
+		    var close = function () {
+		        var close = d.getElementById('close');
+		        close.addEventListener('click', function () {element.remove();});
+		        close.addEventListener('click', asystantPage);
+		    }
+		    var init = function(){
+		       show();
+		       close();
+		       makeSalary();
+		    }
+		    init();
+		}
+
+		// Добавление нового
+		var addBtn = d.getElementById('add');
+		// console.log(addBtn);
+		addBtn.addEventListener('click', function () {
+			var addModal = new ModalAdd;
+		});
+
+		function ModalAdd() {
+			var element = d.createElement('div');
+		    element.className = ('modal');
+		    var show = function (){
+		        d.body.appendChild(element);
+				var userForm = d.getElementById('patientData');
+				var vivodDoctorData = '<h3>Асистент</h3><button id="close">close</button><form id="patientData">';
+				vivodDoctorData += '<p><span class="inputLabel">Фамилия: </span><input  type="text" placeholder="Введите фамилию">';
+				vivodDoctorData += '<p><span class="inputLabel">Имя: </span><input  type="text" placeholder="Введите имя">';
+				vivodDoctorData += '<p><span class="inputLabel">Отчество: </span><input  type="text" placeholder="Введите отчество">';
+				vivodDoctorData += '<p><span class="inputLabel">Дата роджения: </span><input  type="date">';
+				vivodDoctorData += '<p><span class="inputLabel">Ставка за день: </span><input  type="text">';
+				vivodDoctorData += '<p><span class="inputLabel"></span><input type="submit" value="сохранить" name="save"></p></form>'
+		        element.innerHTML = vivodDoctorData;
+			}
+		    var close = function () {
+		        var close = d.getElementById('close');
+		        close.addEventListener('click', function () {element.remove();});
+		        close.addEventListener('click', asystantPage);
+		    }
+		    var save = function () {
+		    	var save = d.querySelector('input[name="save"]');
+		    	
+		    	save.addEventListener('click', function (e) {
+		    		e.preventDefault();
+		    		var newData = [];
+		    		for (var i = 0; i < this.parentNode.parentNode.elements.length; i++) {
+		    			if(this.parentNode.parentNode.elements[i].name !== 'save'){
+		    				newData[i] = this.parentNode.parentNode.elements[i].value
+		    			}
+		    		}
+		    		$.ajax({
+			        url: 'php/asystents/addAsystents.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        async: false,
+			        data: {data: newData},
+			        beforeSend: function () {
+			        	console.log('ajax send' + newData);
+			        	// console.log(newData);
+			        },
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            // console.log(response); //сделать popup
+			            alert('Запись добавлена');
+			            d.getElementsByClassName('modal')[0].remove();
+			            asystantPage();
+			            }
+			        });
+		    	});
+		    }
+		    var init = function(){
+		       show();
+		       close();
+		       save();
+		    }
+		    init();
+		}
+
+		dateSearch.onchange = function () {
+			render();
+		}
+
+		function render() { //вывод асистентов на смене за указанную дату
+			$.ajax({
+		        url: 'php/asystents/workingDays.php',
+		        type: 'POST',
+		        async: false,
+		        dataType: 'json',
+		        data: {'get': 'get', 'date': dateSearch.value},
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		            // console.log(response); //сделать popup
+		            var duty_list = d.getElementById('duty_list');
+		            var vstavka = '';
+		            for(var i = 0; i<response.length; i++){
+						vstavka += '<li class="duty_list_item"><span>' +response[i].asystent + '</span><button  data-id="'+ response[i].id +'" class="duty_list_item_delete"> - </button></li>'
+					};
+					duty_list.innerHTML = vstavka;
+					var id = delete_duty_listBtn(id);
+		        }
+	        });
+		}
+
+		
+		function asystentList() {
+			var select = d.getElementById('asistent_list');
+			var optionVstavka = '<option></option>';
+			for (var id in asystents) {
+				optionVstavka += '<option data-asistentId="'+asystents[id].id+'"">' + asystents[id].asystent + '</option>';
+			}
+			select.innerHTML = optionVstavka;
+			//добавление селекту атрибута data-asistentId выбраной option
+			select.onclick = function addSelectedOptions() {
+				var options = this.childNodes; // массив опций
+				function getSelectedOption(arr) { // функция возврата selected option
+	                for (var i = 0; i < arr.length; i++) {
+	                    if(arr[i].selected === true){
+	                        return arr[i];
+	                    }
+	                }
+	            };
+	            var selectedOpion = getSelectedOption(options); //присваивание переменной результат вызова функции
+            	this.setAttribute('data-asistentId', selectedOpion.getAttribute('data-asistentId')); // занемение атрибута в select
+			}
+
+			
+
+			var add_asistent = d.getElementById('add_asistent'); // кнопка добавления дежурного асистента
+			add_asistent.onclick = function () {
+				var asistent_list_value = select.value;
+				var asistent_list_id = select.getAttribute('data-asistentId');
+				if (asistent_list_value !== '' && asistent_list_value !== null) {
+					$.ajax({  // запрос на добавление  БД и в его успех - добавление элемента на страницу
+				        url: 'php/asystents/workingDays.php',
+				        type: 'POST',
+				        async: false,
+				        dataType: 'json',
+				        data: {'set': 'set', 'asystent' : asistent_list_value, 'asistent_list_id' : asistent_list_id, 'date': dateSearch.value},
+				        beforeSend: function () {
+				        	console.log('ajax send');
+				        	// console.log(asistent_list_value);
+				        	// console.log(dateSearch.value);
+				        	// console.log(this.data);
+				        },
+				        error: function (req, text, error) {
+				            console.log('Проблемма ' + text + error);
+				        },
+				        success: function (response) {
+				            // console.log(response);
+				        }
+			        });
+					render();
+				}
+				// else {this.previousSibling.previousSibling.style.background = 'red' }
+			}
+		}
+
+function delete_duty_listBtn(id) {
+	var duty_list_item_delete = d.getElementsByClassName('duty_list_item_delete');
+	for (var i = 0; i < duty_list_item_delete.length; i++) {
+		duty_list_item_delete[i].onclick = function () {
+			var id = this.getAttribute('data-id');
+			//запрос на удаление из БД и в его успех - удаление
+			$.ajax({
+		        url: 'php/asystents/workingDays.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        async: false,
+		        data: {'del': 'del', 'id' : id,  'date': dateSearch.value},
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        	// console.log(dateSearch.value);
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		            // console.log(response); //сделать popup
+		        }
+	        })
+			this.parentNode.remove();
+		}
+	}
+}		
+		
+
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Отчёт</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a href="asystents.html">Асистенты |</a></li>
+				<li><a href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a href="notes.html">Заметки |</a></li>
+				<li><a class="active_menu" href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		<div class="filter">
+			<span>от /</span><input id="filterFrom" type="date">
+			<span>до /</span><input id="filterTo" type="date">
+			<button id="search">показать</button>
+		</div>
+		<div>
+			<br>
+			<table>
+				<tr>
+					<td>Доходы</td>
+					<td>Затраты общие</td>
+					<td>Затраты на Банк</td>
+					<td>Техник</td>
+					<td>Затраты всего</td>
+					<td>ЗП</td>
+					<td>Прибыль</td>
+				</tr>
+				<tr>
+					<td id="profits">###</td>
+					<td id="costs">###</td>
+					<td id="costs_bank">###</td>
+					<td id="costs_technik">###</td>
+					<td id="costs_all" >###</td>
+					<td id="salary">###</td>
+					<td id="result">###</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<div>
+			<table id="patients_data"> <!--  cellspacing="0" -->
+				
+			</table>
+		</div>
+	</div>
+		
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+
+		var filterFrom = d.getElementById('filterFrom'); // поле с датой для поиска
+		var filterTo = d.getElementById('filterTo'); // поле с датой для поиска
+
+			var y = new Date().getFullYear();
+			var m = + new Date().getMonth() +1;
+			var day = + new Date().getDate();
+			var startDate = y + '-' + ((m >=10) ? m : '0' + m) + '-01'; //начало месяца
+			var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); //сегодняшняя дата
+			filterFrom.value = curentData; // установка начала поиска
+			filterTo.value = curentData; // установка конца поиска
+
+		window.onload = getReport;
+		var searchBtn = d.getElementById('search');
+		searchBtn.onclick = getReport;
+
+
+
+
+
+
+		function getReport() {
+			$.ajax({
+		        url: 'php/report/getReportData.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        data: {
+		        	'searchFrom' : filterFrom.value,
+		        	'searchTo' : filterTo.value}
+		        ,
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		           console.log(response);
+		          renderReport(response);
+	            }
+            } );
+		}
+
+		function renderReport (response) {
+			var profits = d.getElementById('profits'); // ячейка дохода
+			var costs = d.getElementById('costs'); // ячейка затрат
+			var costs_technik = d.getElementById('costs_technik'); // ячейка затрат на техника
+			var costs_bank = d.getElementById('costs_bank'); // ячейка затрат на банк
+			var costs_all = d.getElementById('costs_all'); // ячейка суммы всех затрат
+			var salary = d.getElementById('salary'); // ячейка прибыли
+			var result = d.getElementById('result'); // ячейка прибыли
+			var patients_data = d.getElementById('patients_data'); // список для вывода данных по визитам
+			
+			profits.innerHTML = response.profit;
+			costs.innerHTML = response.costs;
+			costs_bank.innerHTML = response.costs_bank;
+			costs_technik.innerHTML = response.costs_technick;
+			costs_all.innerHTML = response.total_costs;
+			salary.innerHTML = response.salary;
+			result.innerHTML = response.result;
+
+			var vstsvka = '';
+			vstsvka += '<tr>\
+							<td>Дата</td>\
+							<td>Доктор</td>\
+							<td>Пациент</td>\
+							<td>Уплата</td>\
+							<td>Техник</td>\
+						</tr>';
+			for (var i = 0; i < response.patients.length; i++) {
+				vstsvka += '<tr>'+
+								'<td>' + response.patients[i]['data'] + '</td>'+
+								'<td>' + response.patients[i]['doctor'] + '</td>'+
+								'<td>' + response.patients[i]['patients_full_name'] + '</td>'+
+								'<td>' + response.patients[i]['payment'] + '</td>'+
+								'<td>' + response.patients[i]['technik']+'</td>'+
+							'</tr>';
+			}
+			patients_data.innerHTML = vstsvka;
+
+		}
+
+					
+	</script>
+</body>
+</html>

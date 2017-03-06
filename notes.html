@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Заметки</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a href="asystents.html">Асистенты |</a></li>
+				<li><a href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a class="active_menu" href="notes.html">Заметки |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		<div>
+			<p>
+				<input type="date" id="dateSearch"><button id="search">поиск</button>
+			</p>
+			<div id="output">
+				<!-- <ol id="output_notes_list"></ol> -->
+				
+
+			</div>
+		</div>		
+	</div>
+	<div id="preloader">
+		<img src="img/preloader.gif" alt="">
+	</div>
+
+
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+		var records;
+		var preloader = d.getElementById('preloader');
+
+		var dateSearch = d.getElementById('dateSearch'); // поле с датой для поиска
+       	var y = new Date().getFullYear();
+		var m = + new Date().getMonth() +1;
+		var day = + new Date().getDate();
+		var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); // дата сегодняшнего дня
+		dateSearch.value = curentData;
+
+		window.onload = resiveRecords;
+
+		var search = d.getElementById('search');
+		search.onclick = resiveRecords;
+
+		var dateSearch = d.getElementById('dateSearch');
+		dateSearch.onchange = resiveRecords;
+
+		function resiveRecords () {
+			var date = dateSearch.value
+			var birth_date = dateSearch.value.slice(4);
+
+			$.ajax({
+		        url: 'php/notes/notes.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        async: false,
+		        data: {'date' : date, 'birth_date' : birth_date},
+		        beforeSend: function () {
+		        	preloader.style.display = 'block';
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		        	preloader.style.display = 'none';
+		        	// console.log(response);
+		            render(response);
+	            }	
+		    });	
+		}
+
+		function render(data) {
+			var output = d.getElementById('output');
+			output.innerHTML = '';
+			for (var id in data) {
+				if(id === 'notes' && data[id].length !== 0){
+					// console.log(data[id].length === 0 );
+					output.innerHTML = '<div class="output_notes"><h3>Заметки</h3><ol id=output_notes_list></ol></div>';
+					for (var i = 0; i < data[id].length; i++) {
+							var element = d.createElement('li');
+							element.className = 'output_list_item';
+							element.innerHTML = '<span>'+data[id][i].full_name +'</span><span>'+data[id][i].phone +'</span><span>'+data[id][i].noteDate +'</span><span>'+data[id][i].note +'</span>';
+						var output_notes_list = d.getElementById('output_notes_list');
+							output_notes_list.appendChild(element);
+						// 	console.log(data[id][i]);
+					}
+				}
+
+				else if(id === 'birth_date' && data[id].length !== 0){
+					// console.log(data[id].length === 0 );
+					output.innerHTML += '<div class="output_birth_date"><h3>Дни рождения пациентов</h3><ol id=output_birth_date_list></ol></div>';
+					for (var i = 0; i < data[id].length; i++) {
+							var element = d.createElement('li');
+							element.className = 'output_list_item';
+							element.innerHTML = '<span>'+data[id][i].full_name +'</span><span>'+data[id][i].phone +'</span>';
+							var output_birth_date_list = d.getElementById('output_birth_date_list');
+							output_birth_date_list.appendChild(element);
+							// console.log(data[id][i]);
+					}
+				}
+
+
+
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>

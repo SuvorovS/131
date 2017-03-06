@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Зарплаты</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a href="price.html">Прайс |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="materials.html">Материалы |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>	
+				<li><a class="active_menu" href="salary.html">Зарплаты |</a></li>	
+			</ul>
+		</div>
+		<div class="filter">
+			<span>от /</span><input id="filterFrom" type="date">
+			<span>до /</span><input id="filterTo" type="date">
+			<button id="search">показать</button>
+		</div>
+		<br>
+		<div id="doctors">
+			<ul id="doctors_list">
+				
+			</ul>			
+		</div>
+		<div id="admins">
+			<ul id="admins_list">
+				
+			</ul>			
+		</div>
+	</div>
+		
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+
+		var filterFrom = d.getElementById('filterFrom'); // поле с датой для поиска
+		var filterTo = d.getElementById('filterTo'); // поле с датой для поиска
+
+		var y = new Date().getFullYear();
+		var m = + new Date().getMonth() +1;
+		var day = + new Date().getDate();
+		var startDate = y + '-' + ((m >=10) ? m : '0' + m) + '-01'; //начало месяца
+		var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); //сегодняшняя дата
+		filterFrom.value = startDate; // установка начала поиска
+		filterTo.value = curentData; // установка конца поиска
+
+		// window.onload = getReport;
+		// var searchBtn = d.getElementById('search');
+		// searchBtn.onclick = getReport;
+
+
+
+
+
+
+		// function getReport() {
+		// 	$.ajax({
+		//         url: 'php/report/getReportData.php',
+		//         type: 'POST',
+		//         dataType: 'json',
+		//         data: {
+		//         	'searchFrom' : filterFrom.value,
+		//         	'searchTo' : filterTo.value}
+		//         ,
+		//         beforeSend: function () {
+		//         	console.log('ajax send');
+		//         },
+		//         error: function (req, text, error) {
+		//             console.log('Проблемма ' + text + error);
+		//         },
+		//         success: function (response) {
+		//            console.log(response);
+		//           renderReport(response);
+	 //            }
+  //           } );
+		// }
+
+		// function renderReport (response) {
+		// 	var costsCell = d.getElementById('costs');
+		// 	var profitsCell = d.getElementById('profits');
+		// 	costsCell.innerHTML = response.costs;
+		// 	profitsCell.innerHTML = response.profit;
+		// }
+
+
+	</script>
+</body>
+</html>

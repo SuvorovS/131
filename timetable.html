@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Расписание</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a class="active_menu" href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a href="asystents.html">Асистенты |</a></li>
+				<li><a href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a href="notes.html">Заметки |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		
+		<div id="calendar_box">
+			<h3 id="calendar_head">
+				<span>Расписание на: </span><input id="dateSearch" type="date"><button id="search">search</button><button id="save">save</button>
+			</h3>
+
+			<div class="calendar_doctor">
+				<h4 class="calendar_doctor_head">
+					<input class="doctor_name" type="text" placeholder="Введите доктора"><button class="clear">clear</button>
+				</h4>
+				<div class="record">
+					<div>
+						<span class=span>9-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div  class="record">
+					<div>
+						<span class=span>9-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="restTime">
+					<div>
+						<span class=span>ОБЕД</span>
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+			</div>
+
+
+			<div class="calendar_doctor">
+				<h4 class="calendar_doctor_head">
+					<input class="doctor_name" type="text" placeholder="Введите доктора"><button class="clear">clear</button>
+				</h4>
+				<div class="record">
+					<div>
+						<span class=span>9-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div  class="record">
+					<div>
+						<span class=span>9-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="restTime">
+					<div>
+						<span class=span>ОБЕД</span>
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+			</div>
+
+			<div class="calendar_doctor">
+				<h4 class="calendar_doctor_head">
+					<input class="doctor_name" type="text" placeholder="Введите доктора"><button class="clear">clear</button>
+				</h4>
+				<div class="record">
+					<div>
+						<span class=span>9-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div  class="record">
+					<div>
+						<span class=span>9-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>10-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>11-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>12-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>13-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="restTime">
+					<div>
+						<span class=span>ОБЕД</span>
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>14-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>15-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>16-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-00: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+				<div class="record">
+					<div>
+						<span class=span>17-30: </span><input type="text" placeholder="Пациент">
+					</div>
+					<div>
+						<span class=span>телеф: </span><input type="text" placeholder="телефон">
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="preloader">
+		<img src="img/preloader.gif" alt="">
+	</div>
+
+
+
+	<script src="js/jquery.js"></script>
+	<script>
+		'use strict'
+		var d = document;
+		var records;
+		var preloader = d.getElementById('preloader');
+
+		var dateSearch = d.getElementById('dateSearch'); // поле с датой для поиска
+       	var y = new Date().getFullYear();
+		var m = + new Date().getMonth() +1;
+		var day = + new Date().getDate();
+		var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); // дата сегодняшнего дня
+		dateSearch.value = curentData;
+
+
+
+
+		window.onload = renderRecords;
+
+
+
+
+		var search = d.getElementById('search');
+		search.onclick = renderRecords;
+
+		var dateSearch = d.getElementById('dateSearch');
+		dateSearch.onchange = renderRecords;
+
+		function renderRecords () {
+			console.log('renderRecords');
+
+
+			var recordInputs = d.querySelectorAll('.record input');
+			for (var i = 0; i < recordInputs.length; i++) {
+				recordInputs[i].value = '';
+				recordInputs[i].parentNode.parentNode.style.background = '#59d259';
+
+			}
+			var doctorInputs = d.getElementsByClassName('doctor_name');
+			for (var i = 0; i < doctorInputs.length; i++) {
+				doctorInputs[i].value = '';
+			}
+
+
+
+
+
+			var date = d.getElementById('dateSearch').value;
+			$.ajax({
+		        url: 'php/patients_records/records.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        async: false,
+		        data: {'resive': 1, 'date' : date},
+		        beforeSend: function () {
+		        	preloader.style.display = 'block';
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		        	preloader.style.display = 'none';
+		            console.log(response);
+		            var records = response;
+
+		            var render = {};
+					for(var i = 0; i < records.length; i++){
+						var doc = records[i].doctor;
+						if(i === 0){
+							render[doc] = doc;
+						}
+						else if(records[i].doctor !== records[i-1].doctor){
+							render[doc] = doc;
+						}
+					}
+					for(var key in render){
+									render[key] = [];
+							for(var k = 0; k < records.length; k++){
+								if(records[k].doctor === key){
+									var time = records[k].time;
+									var label = records[k].label;
+									var phone = records[k].phone;
+									var doctor = records[k].doctor;
+									render[key][k] = {'time' : time, 'label' : label, 'phone' : phone};
+								}
+							}
+						}
+					console.log(render);
+
+					var doctors = d.getElementsByClassName('doctor_name');
+					var counter = 0;
+					for(var item in render){
+						doctors[counter].value = item;
+						var elements = doctors[counter].parentNode.parentNode.children;
+						// console.log(elements);
+							for (var i = 0; i<render[item].length; i++) {
+								if (render[item][i] !== undefined) {
+									var time = render[item][i].time;
+									var label = render[item][i].label;
+									var phone = render[item][i].phone;
+									
+									for(var k = 0; k<elements.length; k++){
+										if (elements[k].className === 'record') {
+											elements[k].style.background = '#59d259';
+											if (elements[k].children[0].children[0].innerHTML === time) {
+												// elements[k].style.background = 'red';
+												elements[k].children[0].children[1].value = label;
+												elements[k].children[1].children[1].value = phone;
+											}
+										
+											if(elements[k].children[0].children[1].value !== '' || elements[k].children[1].children[1].value !== ''){
+												elements[k].style.background = '#9e5681';
+											}
+										}
+									}
+								}
+							}
+						counter +=1;
+					}
+	            }	
+		    });	
+		}
+
+
+
+		//запись визитов в базу
+		var saveBtn = d.getElementById('save');
+		saveBtn.addEventListener('click', saveRecords);
+		saveBtn.addEventListener('click', function (){search.onclick();});
+
+		function saveRecords() {
+			
+			console.log('saveRecords');
+
+			var records = makeRecordsData();
+			var date = d.getElementById('dateSearch').value;
+
+			$.ajax({
+		        url: 'php/patients_records/records.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        async: false,
+		        data: {'date' : date, 'records': records, 'save': 1}
+		        ,
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		            console.log(response);
+		        }
+		    });
+		}
+
+function makeRecordsData(){ //сборка масива записей
+    var data = {};
+	var doctors = d.getElementsByClassName('doctor_name');
+	for(var i = 0; i<doctors.length; i++){
+		var inputs = doctors[i].parentNode.parentNode.children;
+		var doctor = doctors[i].value;
+		if(doctor !== ''){
+			data[doctor] = [];		
+				
+			for(var k = 0; k<inputs.length; k++){
+				if(inputs[k].className === 'record'){
+					var label = inputs[k].children[0].children[1].value;
+					var phone = inputs[k].children[1].children[1].value;
+					var time = inputs[k].children[0].children[0].innerHTML;
+					if(label !== ''){
+						data[doctor][k] = {'time' : time,'label' : label, 'phone' : phone};
+	                }
+	            }
+			}
+			if(data[doctor].length === 0){
+				data[doctor][i] = {'time' : '', 'label' : '', 'phone' : ''};
+			};
+		}
+	}
+
+	
+	console.log(data);
+	return data;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+var clear = d.getElementsByClassName('clear');
+//console.log(clear);
+
+for (var i = 0; i<clear.length; i++) {
+	clear[i].onclick = function () {
+		var elements = this.parentNode.parentNode.children;
+		for (var k = 0; k<elements.length; k++) {
+			if(elements[k].className === 'record'){
+				elements[k].children[0].childNodes[2].value = '';
+				elements[k].children[1].childNodes[2].value = '';
+				elements[k].style.background = '#59d259';
+			}
+		}
+		
+	}
+}
+
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Прайс</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a href="admins.html">Админы |</a></li>
+				<li><a href="asystents.html">Асистенты |</a></li>
+				<li><a class="active_menu" href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a href="notes.html">Заметки |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		<div id="doctors">  
+			<ol></ol>
+		</div>
+		<div>
+			<button id="add">Добавить в прайс</button>
+		</div>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+		var therapy;
+		var scroll = 0;
+
+		window.addEventListener('load', pricePage);
+
+function pricePage(e) {
+    $.ajax({
+        url: 'php/price/getTherapy.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {key: 'value'}
+        ,
+        beforeSend: function () {
+        	console.log('ajax send');
+        },
+        error: function (req, text, error) {
+            console.log('Проблемма ' + text + error);
+        },
+        success: function (response) {
+            therapy = response;
+            var ul = d.createElement('ul');
+            var vivod = d.querySelector('#doctors ol');
+            var vstavka = '';
+            for (var i = 0; i < response.length; i++) {
+                vstavka += '<li class="patient" data-id = "'+ response[i]['id'] +'" data-nth =' +  i +'>'+ response[i]['therapy']+'</li>';
+            }
+            vivod.innerHTML = vstavka;
+            var patients_list = d.getElementsByClassName('patient');
+            for (var f = 0; f<patients_list.length; f++){
+                patients_list[f].addEventListener('click', function () {
+                	var doctornth = (this.getAttribute('data-nth'));
+                	scroll = d.body.scrollTop;
+                	var modal = new Modal(doctornth);
+                	d.body.scrollTop = 0;
+					changeBtn(); //завести кнопки изменения данных
+					saveBtn(); //завести кнопки сохранения данных
+					deleteBtn();
+                } );
+            }
+        }
+    });
+}
+
+function  saveBtn() {
+	var newData = [];
+	var inputs = d.getElementById('patientData').elements;
+
+	var changeBtn = d.querySelector('input[name="save"]');
+	changeBtn.addEventListener('click', function (e) {
+		e.preventDefault();
+		for (var i = 0; i<inputs.length; i ++) {
+			if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+			    newData[i] = inputs[i].value;//	inputs[i].disabled = false;
+			}
+		}
+			console.log(newData);
+	});
+	changeBtn.addEventListener('click', function(e) {
+		e.preventDefault();
+		$.ajax({
+	        url: 'php/price/setTherapy.php',
+		        type: 'POST',
+	        dataType: 'json',
+	        data: {id: d.getElementById('patientData').getAttribute('data-id'), data: newData},
+	        beforeSend: function () {
+	        	console.log('ajax send');
+	        	// console.log(this.data);
+	        },
+	        error: function (req, text, error) {
+	            console.log('Проблемма ' + text + error);
+	        },
+	        success: function (response) {
+	            console.log(response); //сделать popup
+	            alert('Запись изменена');
+	            d.getElementsByClassName('modal')[0].remove();
+	            pricePage();
+	            }
+	        });
+	    });
+}
+
+function  deleteBtn() {
+	var deleteBtn = d.querySelector('input[name="delete"]');
+	deleteBtn.addEventListener('click', function (e) {
+		e.preventDefault();
+			if (prompt('Вы собираетесь удалить услугу из прайса, для подтверждения введите в поле слово УДАЛИТЬ большими буквами', 'УДАЛИТЬ') === 'УДАЛИТЬ') {
+				$.ajax({
+			        url: 'php/price/deleteTherapy.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        data: {id: d.getElementById('patientData').getAttribute('data-id')}  ,
+			        beforeSend: function () {
+			        	console.log('ajax send');
+			        	// console.log(this.data);
+			        },
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            console.log(response); //сделать popup 
+			            alert('ЗАПИСЬ УДАЛЕНА ')
+			            d.getElementsByClassName('modal')[0].remove();
+			            pricePage();
+		          	}
+	       		});
+			}
+			else {
+				alert('ОТМЕНА УДАЛЕНИЯ ЗАПИСИ')
+			}		
+	});
+}
+
+function changeBtn() {
+	var inputs = d.getElementById('patientData').elements;
+	var changeBtn = d.querySelector('input[name="change"]');
+	changeBtn.onclick = function (e) {
+		e.preventDefault();
+		if (prompt('Вы собираетесь изменить услугу в прайсе, для подтверждения введите в поле слово РЕДАКТИРОВАТЬ большими буквами', 'РЕДАКТИРОВАТЬ') === 'РЕДАКТИРОВАТЬ') {
+			for (var i = 0; i<inputs.length; i ++) {
+				if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+					inputs[i].disabled = false;
+				}
+			}
+		}
+	}
+}
+
+function Modal(nth) {
+    var element = d.createElement('div');
+    element.className = ('modal');
+    var show = function (){
+        d.body.appendChild(element);
+		var userForm = d.getElementById('patientData');
+		var vivodDoctorData = '<h3>Услуга</h3><button id="close">close</button><form id="patientData"  data-id="'+ therapy[nth]['id']+'">';
+		vivodDoctorData += '<p>Название: <input disabled type="text" value="' + therapy[nth]['therapy'] +'">';
+		vivodDoctorData += '<p>Цена: <input disabled type="text" value="' + therapy[nth]['price'] +'">';
+		vivodDoctorData += '<p><input type="submit" value="Изменить" name="change"></p>';
+		vivodDoctorData += '<p><input type="submit" value="сохранить" name="save"></p>';
+		vivodDoctorData += '<p><input type="submit" value="удалить" name="delete"></p></form>'
+        element.innerHTML = vivodDoctorData;
+	}
+    var close = function () {
+        var close = d.getElementById('close');
+        close.addEventListener('click', function () {element.remove();});
+        close.addEventListener('click', pricePage);
+        close.addEventListener('click', function () {d.body.scrollTop = scroll});
+    }
+    var init = function(){
+       show();
+       close();
+    }
+    init();
+}
+
+
+
+
+// Добавление нового
+var addBtn = d.getElementById('add');
+console.log(addBtn);
+addBtn.addEventListener('click', function () {
+	var addModal = new ModalAdd;
+	scroll = d.body.scrollTop;
+	d.body.scrollTop = 0;
+});
+
+
+function ModalAdd() {
+	var element = d.createElement('div');
+    element.className = ('modal');
+    var show = function (){
+        d.body.appendChild(element);
+		var userForm = d.getElementById('patientData');
+		var vivodDoctorData = '<h3>Услуга</h3><button id="close">close</button><form id="patientData">';
+		vivodDoctorData += '<p>Наименование: <input  type="text" placeholder="Введите наименование">';
+		vivodDoctorData += '<p>Стоимость: <input  type="text" placeholder="Введите стоимость">';
+		vivodDoctorData += '<p><input type="submit" value="сохранить" name="save"></p></form>'
+        element.innerHTML = vivodDoctorData;
+	}
+    var close = function () {
+        var close = d.getElementById('close');
+        close.addEventListener('click', function () {element.remove();});
+        close.addEventListener('click', pricePage);
+        close.addEventListener('click', function () {d.body.scrollTop = scroll});
+    }
+    var save = function () {
+    	var save = d.querySelector('input[name="save"]');
+    	
+    	save.addEventListener('click', function (e) {
+    		e.preventDefault();
+    		var newData = [];
+    		for (var i = 0; i < this.parentNode.parentNode.elements.length; i++) {
+    			if(this.parentNode.parentNode.elements[i].name !== 'save'){
+    				newData[i] = this.parentNode.parentNode.elements[i].value
+    			}
+    		}
+    		$.ajax({
+	        url: 'php/price/addTherapy.php',
+	        type: 'POST',
+	        dataType: 'json',
+	        data: {data: newData},
+	        beforeSend: function () {
+	        	console.log('ajax send' + newData);
+	        	console.log(newData);
+	        },
+	        error: function (req, text, error) {
+	            console.log('Проблемма ' + text + error);
+	        },
+	        success: function (response) {
+	            console.log(response); //сделать popup
+	            d.getElementsByClassName('modal')[0].remove();
+	            pricePage();
+	            }
+	        });
+    	});
+    }
+    var init = function(){
+       show();
+       close();
+       save();
+    }
+    init();
+}
+
+
+	</script>
+</body>
+</html>

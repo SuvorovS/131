@@ -1,0 +1,55 @@
+body {margin: 0; padding: 0;}
+
+.login {
+	display: none;
+	background-color: pink;
+	height: 1000px;
+	form {
+		background-color: grey;
+		display: block;
+		width: 200px;
+		margin: auto;
+		padding-top: 400px;
+	}
+}
+
+.matroa {
+	h1 {
+		margin: 0;
+	}
+}
+
+
+
+
+.main{
+	//width: 1200px;
+	margin: auto;
+	background-color: #ccc;
+	overflow: hidden;
+}
+.tab {
+	display: inline-block;
+	margin: 0, 20px;
+	padding: 0, 15px;
+	border: solid 1px #0b6c83;
+	float: left;
+	font-size: 30px;
+	text-align: center;
+	line-height: 50px;
+
+	background-color: #333;
+	a{
+
+		display: block;
+		width: 100%;
+		height: 100%;
+		text-decoration: none;
+		color: antiquewhite;
+		&:hover {
+			color: #ffe199;
+			background-color: #0f2083;
+		}
+	}
+
+}

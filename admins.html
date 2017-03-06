@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Администраторы</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="main">
+		<div class="nav">
+			<ul>
+				<li><a href="index.html">Главная |</a></li>
+				<li><a href="timetable.html">Расписание |</a></li>
+				<li><a href="patients.html">Пациенты |</a></li>
+				<li><a href="doctors.html">Доктора |</a></li>
+				<li><a class="active_menu" href="admins.html">Админы |</a></li>
+				<li><a href="asystents.html">Асистенты |</a></li>
+				<li><a href="price.html">Услуги |</a></li>
+				<!-- <li><a href="materials.html">Материалы |</a></li> -->
+				<li><a href="costs.html">Затраты |</a></li>
+				<li><a href="technick.html">Техник |</a></li>
+				<li><a href="bank.html">Банк |</a></li>
+				<li><a href="notes.html">Заметки |</a></li>
+				<li><a href="report.html">Отчёт |</a></li>
+			</ul>
+		</div>
+		<div id="doctors">  
+			<ol></ol>
+		</div>
+		<div>
+			<button id="add">Добавить админа</button>
+		</div>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script>
+		var d = document;
+		var admins;
+
+		window.addEventListener('load', adminPage);
+
+		function adminPage(e) {
+		    //e.preventDefault();
+		    $.ajax({
+		        url: 'php/admins/getAdmins.php',
+		        type: 'POST',
+		        dataType: 'json',
+		        data: {key: 'value'}
+		        ,
+		        beforeSend: function () {
+		        	console.log('ajax send');
+		        },
+		        error: function (req, text, error) {
+		            console.log('Проблемма ' + text + error);
+		        },
+		        success: function (response) {
+		            admins = response;
+		            var ul = d.createElement('ul');
+		            var vivod = d.querySelector('#doctors ol');
+		            var vstavka = '';
+		            for (var i = 0; i < response.length; i++) {
+		                vstavka += '<li class="patient" data-id = "'+ response[i]['id'] +'" data-nth =' +  i +'>'+ response[i]['admin']+'</li>';
+		            }
+		            vivod.innerHTML = vstavka;
+		            var patients_list = d.getElementsByClassName('patient');
+		            for (var f = 0; f<patients_list.length; f++){
+		                patients_list[f].addEventListener('click', function () {
+		                	if(prompt('введите пароль', '') === '654321Sl'){
+			                	var doctornth = (this.getAttribute('data-nth'));
+			                	var modal = new Modal(doctornth);
+								changeBtn(); //завести кнопки изменения данных
+								saveBtn(); //завести кнопки сохранения данных
+								deleteBtn();
+							}
+							else {
+								alert('пароль не верный')
+							}
+		                } );
+		            }
+		        }
+		    });
+		}
+
+		function changeBtn() {
+			var inputs = d.getElementById('patientData').elements;
+			var changeBtn = d.querySelector('input[name="change"]');
+			changeBtn.onclick = function (e) {
+				e.preventDefault();
+				if (prompt('Вы собираетесь удалить админа, для подтверждения введите в поле слово РЕДАКТИРОВАТЬ большими буквами', 'РЕДАКТИРОВАТЬ') === 'РЕДАКТИРОВАТЬ') {
+					for (var i = 0; i<inputs.length; i ++) {
+						if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+							inputs[i].disabled = false;
+						}
+					}
+				}
+			}
+		}
+
+		function  saveBtn() {
+			var newData = [];
+			var inputs = d.getElementById('patientData').elements;
+
+			var changeBtn = d.querySelector('input[name="save"]');
+			changeBtn.addEventListener('click', function (e) {
+				e.preventDefault();
+				for (var i = 0; i<inputs.length; i ++) {
+					if(inputs[i].type !== 'submit' && inputs[i].type !== 'save'){
+					    newData[i] = inputs[i].value;//	inputs[i].disabled = false;
+					}
+				}
+					console.log(newData);
+			});
+			changeBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				$.ajax({
+			        url: 'php/admins/setAdmins.php',
+				        type: 'POST',
+			        dataType: 'json',
+			        data: {id: d.getElementById('patientData').getAttribute('data-id'), data: newData},
+			        beforeSend: function () {
+			        	console.log('ajax send');
+			        	// console.log(this.data);
+			        },
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            console.log(response); //сделать popup
+			            alert('Запись изменена');
+			            d.getElementsByClassName('modal')[0].remove();
+			            adminPage();
+			            }
+			        });
+			    });
+		}
+
+		function  deleteBtn() {
+			var deleteBtn = d.querySelector('input[name="delete"]');
+			deleteBtn.addEventListener('click', function (e) {
+				e.preventDefault();
+					if (prompt('Вы собираетесь удалить админа, для подтверждения введите в поле слово УДАЛИТЬ большими буквами', 'УДАЛИТЬ') === 'УДАЛИТЬ') {
+						$.ajax({
+				        url: 'php/admins/deleteAdmins.php',
+				        type: 'POST',
+				        dataType: 'json',
+				        data: {id: d.getElementById('patientData').getAttribute('data-id')}  ,
+				        beforeSend: function () {
+				        	console.log('ajax send');
+				        },
+				        error: function (req, text, error) {
+				            console.log('Проблемма ' + text + error);
+				        },
+				        success: function (response) {
+				            console.log(response); //сделать popup 
+				            d.getElementsByClassName('modal')[0].remove();
+				            adminPage();
+			          	}
+			        });
+				}
+				else {
+					alert('ОТМЕНА УДАЛЕНИЯ ЗАПИСИ')
+				}		
+			});
+		}
+
+
+
+
+		function Modal(nth) {
+		    var element = d.createElement('div');
+		    element.className = ('modal');
+		    var show = function (){
+		        d.body.appendChild(element);
+				var userForm = d.getElementById('patientData');
+				var vivodDoctorData = '<h3>Админ</h3><button id="close">close</button><form id="patientData"  data-id="'+ admins[nth]['id']+'">';
+				vivodDoctorData += '<p hidden>id: <input id="adminId" disabled type="text" value="' + admins[nth]['id'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Фамилия: </span><input id="adminName" disabled type="text" value="' + admins[nth]['admin'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Имя: </span><input disabled type="text" value="' + admins[nth]['name'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Отчество: </span><input disabled type="text" value="' + admins[nth]['second_name'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Дата роджения: </span><input disabled type="date" value="' + admins[nth]['birthday'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Ставка за день: </span><input disabled type="text" value="' + admins[nth]['stavka'] +'">';
+				vivodDoctorData += '<p><span class="inputLabel">Пароль: </span><input disabled type="text" value="' + admins[nth]['pass'] +'">';
+				vivodDoctorData += '<p><input type="submit" value="Изменить" name="change"></p>';
+				vivodDoctorData += '<p><input type="submit" value="сохранить" name="save"></p>';
+				vivodDoctorData += '<p><input type="submit" value="удалить" name="delete"></p></form>'
+		        vivodDoctorData += '<div>\
+								<h3>Зарплата</h3>\
+								от / <input id="searchFrom" type="date"></input> до / <input id="searchTo" type="date"></input>\
+								<button id="showSalary">показать</button>\
+								<div id="salaryPanel">dhgdghdfgh </div>\
+							</div>';
+				element.innerHTML = vivodDoctorData;
+				var searchFrom = d.getElementById('searchFrom'); // поле с датой для поиска
+		        var searchTo = d.getElementById('searchTo'); // поле с датой для поиска
+				var y = new Date().getFullYear();
+				var m = + new Date().getMonth() +1;
+				var day = + new Date().getDate();
+				var startDate = y + '-' + ((m >=10) ? m : '0' + m) + '-01'; //дата начала текущего месяца
+				var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day); // дата сегодняшнего дня
+				searchFrom.value = startDate;
+				searchTo.value = curentData;
+				//"2017-01-09" это формат даты в инпуте
+			}
+
+			var makeSalary = function (data){
+				var searchFrom = d.getElementById('searchFrom').value;
+				var searchTo = d.getElementById('searchTo').value;
+				var adminId = d.getElementById('adminId').value;
+				var showSalaryBtn = d.getElementById('showSalary');
+				var salaryPanel = d.getElementById('salaryPanel');
+				
+				showSalaryBtn.onclick = makeSalary;
+
+				$.ajax({
+			        url: 'php/admins/getSalary_admins.php ',
+			        type: 'POST',
+			        dataType: 'json',
+			        data: {'from' : searchFrom, 'to' : searchTo, 'adminId' : adminId}  ,
+			        beforeSend: function () {},
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            console.log(response); //сделать popup 
+			            salaryPanel.innerHTML = '<div class="block salary"><p class="block-head">К-во смен</p><p id="totalSalery">'+ response.workingDaysCount +'</p></div>\
+		            							<div class="block payment"><p class="block-head">Зарплата</p><p id="totalPayment">'+ response.payment +'</p></div>\
+		            							<div class="block avans"><p class="block-head">Аванс</p><p id="avans_vivod">а тут авансы</p></div>';
+
+						var avans_vivod = d.getElementById('avans_vivod');
+						avans_vivod.innerHTML = '';
+						
+						for (var i = 0; i<response.avans.length; i++) {
+
+							avans_vivod.innerHTML += '<div>'
+							avans_vivod.innerHTML += '<div class="avans_size">'+response.avans[i]['avans'] +'</div>';
+							avans_vivod.innerHTML += '<div class="avans_data">'+response.avans[i]['date'] +'</div>';
+						}
+						avans_vivod.innerHTML += '<input type="text" value="0"><input type="date"><button id="addAvans">новый аванс</button>'
+						
+						avans_vivod.innerHTML += '</div>'
+						salaryPanel.innerHTML += '<div class="block delta"><p class="block-head">Остаток</p><p id="totalResult">А тут разница</p></div>';
+						var totalPayment = +d.getElementById('totalPayment').innerHTML;
+						var avansList = d.getElementsByClassName('avans_size');
+						var totalAvas = 0;
+						for (var k = 0; k < avansList.length; k++) {
+							totalAvas += +avansList[k].innerHTML;
+						}
+						var totalResult = d.getElementById('totalResult');
+						totalResult.innerHTML = totalPayment - totalAvas;
+
+						var addAvansBtn = d.getElementById('addAvans');
+						
+
+						addAvansBtn.onclick = function() {
+							var date = this.previousSibling;
+							var avans = this.previousSibling.previousSibling;
+							if (date.value === '' ) {
+								console.log('no data');
+								avans.style.border = '3px solid red';
+								date.style.border = '3px solid red';
+								return
+							}
+							else {
+								console.log(typeof(date.value));
+							 	console.log(avans);
+
+							 	$.ajax({
+							        url: 'php/admins/setAvans.php ',
+							        type: 'POST',
+							        dataType: 'json',
+							        data: {'avans' : avans.value, 'date' : date.value, 'adminId' : adminId}  ,
+							        beforeSend: function () {
+							        	console.log(adminId);
+							        },
+							        error: function (req, text, error) {
+							            console.log('Проблемма ' + text + error);
+							        },
+							        success: function (response) {
+							            console.log(response); //сделать popup 
+						          	}
+							    });
+							}
+							makeSalary();
+						}
+		          	}
+			    });
+			}
+
+
+
+		    var close = function () {
+		        var close = d.getElementById('close');
+		        close.addEventListener('click', function () {element.remove();});
+		        close.addEventListener('click', adminPage);
+		    }
+		    var init = function(){
+		       show();
+		       close();
+		       makeSalary();
+		    }
+		    init();
+		}
+
+
+
+
+
+
+
+
+
+
+
+		// Добавление нового
+		var addBtn = d.getElementById('add');
+		console.log(addBtn);
+		addBtn.addEventListener('click', function () {
+			var addModal = new ModalAdd;
+		});
+
+		function ModalAdd() {
+			var element = d.createElement('div');
+		    element.className = ('modal');
+		    var show = function (){
+		        d.body.appendChild(element);
+				var userForm = d.getElementById('patientData');
+				var vivodDoctorData = '<h3>Админ</h3><button id="close">close</button><form id="patientData">';
+				vivodDoctorData += '<p><span class="inputLabel">Фамилия: </span><input  type="text" placeholder="Введите фамилию">';
+				vivodDoctorData += '<p><span class="inputLabel">Имя: </span><input  type="text" placeholder="Введите имя">';
+				vivodDoctorData += '<p><span class="inputLabel">Отчество: </span><input  type="text" placeholder="Введите отчество">';
+				vivodDoctorData += '<p><span class="inputLabel">Дата роджения: </span><input  type="date">';
+				vivodDoctorData += '<p><span class="inputLabel">Ставка за день: </span><input  type="text">';
+				vivodDoctorData += '<p><span class="inputLabel">Пароль: </span><input type="text">';
+				vivodDoctorData += '<p><input type="submit" value="сохранить" name="save"></p></form>'
+		        element.innerHTML = vivodDoctorData;
+			}
+		    var close = function () {
+		        var close = d.getElementById('close');
+		        close.addEventListener('click', function () {element.remove();});
+		        close.addEventListener('click', adminPage);
+		    }
+		    var save = function () {
+		    	var save = d.querySelector('input[name="save"]');
+		    	
+		    	save.addEventListener('click', function (e) {
+		    		e.preventDefault();
+		    		var newData = [];
+		    		for (var i = 0; i < this.parentNode.parentNode.elements.length; i++) {
+		    			if(this.parentNode.parentNode.elements[i].name !== 'save'){
+		    				newData[i] = this.parentNode.parentNode.elements[i].value
+		    			}
+		    		}
+		    		$.ajax({
+			        url: 'php/admins/addAdmins.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        data: {data: newData},
+			        beforeSend: function () {
+			        	console.log('ajax send' + newData);
+			        	// console.log(newData);
+			        },
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            console.log(response); //сделать popup
+			            alert('Запись добавлена');
+			            d.getElementsByClassName('modal')[0].remove();
+			            adminPage();
+			            }
+			        });
+		    	});
+		    }
+		    var init = function(){
+		       show();
+		       close();
+		       save();
+		    }
+		    init();
+		}
+
+	</script>
+</body>
+</html>

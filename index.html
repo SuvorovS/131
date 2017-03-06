@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Главная</title>
+	<meta charset='utf-8'>
+	<style type="text/css">
+		a {    	text-decoration: none;
+			    display: block;
+			    width: 100px;
+			    height: 100px;
+			    padding: 10px;
+			    border: 1px solid black;
+			    margin: 10px;
+			    background: #5e67aa;
+			    float: left;
+			    text-align: center;
+			    line-height: 90px;
+			    color: #ffffff;
+			    font-size: 20px;
+			    font-weight: 600;
+			}
+			body {
+				width: 800px;
+				margin: auto;
+			}
+			.authorizationPanel {
+	  		    width: 304px;
+			    height: 100px;
+			    margin: auto;
+			    margin-top: 200px;
+			    background: #c2c6e1;
+			    border: 5px solid #485089;
+			    border-radius: 17px;
+			    line-height: 90px;
+			    padding: 10px;
+			}
+			.authorizationPanel * {
+				display: block;
+				width: 100%;
+				float: left;
+				margin: 5px 0;
+			}
+
+	</style>
+	<!-- <link rel="stylesheet" href="css/main.css"> -->
+</head>
+<body>
+
+<script type="text/javascript" src="js/jquery.js"></script> 
+<script type="text/javascript">
+	'use strict'
+ 	var d = document;
+
+	var admins = (function getAdmins() {
+		var res;
+		$.ajax({
+			url: 'php/admins/authorization.php',
+	        type: 'POST',
+	        dataType: 'json',
+	        async: false,
+	        data: {'authorization1': 'step1'},
+	        beforeSend: function () {
+	        		
+	        },
+	        error: function (req, text, error) {
+	            console.log('Проблемма ' + text + error);
+	        },
+	        success: function (response) {
+	            res = response;
+	            	
+	        }
+		});
+		return res;
+	})();
+
+	var y = new Date().getFullYear();
+	var m = + new Date().getMonth() +1;
+	var day = + new Date().getDate();
+	var startDate = y + '-' + ((m >=10) ? m : '0' + m) + '-01';
+			
+	var curentData = y + '-' + ((m >=10) ? m : '0' + m) + '-' + ((day >=10) ? day : '0' + day);
+	
+
+
+
+	function getCookie(name) {
+	  var matches = document.cookie.match(new RegExp(
+	    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	  ));
+	  return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
+
+	var cookie = getCookie('admin');
+	// console.log(cookie);
+
+	if (cookie === 'true111') {
+		// console.log(getCookie('admin'));
+		mainPage();
+	}
+	else {
+		console.log('NO');
+		var authorizationPanel = d.createElement('div');
+		authorizationPanel.className = 'authorizationPanel';
+		var vstavka = '<select name="admin">';
+			vstavka += '<option></option>';
+		for (var i = 0; i < admins.length; i++){
+			vstavka += '<option data-adminId="'+admins[i].id+'">' + admins[i].admin + '</option>';
+		}
+		vstavka += '</select>';
+		vstavka += '<input type="password"><button id="autorization">Войти</button>';
+		authorizationPanel.innerHTML = vstavka;
+		d.body.appendChild(authorizationPanel);
+		var select = d.querySelector('select');
+		select.onblur = function () {
+			var options = this.childNodes;
+			function getSelectedOption(arr) {
+                for (var i = 0; i < arr.length; i++) {
+                    if(arr[i].selected === true){
+                        return arr[i];
+                    }
+                }
+            };
+            var selectedOpion = getSelectedOption(options);
+            this.setAttribute('data-adminId', selectedOpion.getAttribute('data-adminid'));
+		}
+
+		var autorization = d.getElementById('autorization'); // Кнопка авторизации
+
+		autorization.onclick = function () {
+			var admin = this.previousSibling.previousSibling; // Значение поля админа
+			var adminId = this.previousSibling.previousSibling.getAttribute('data-adminid');
+			var pass = this.previousSibling; // Значение поля пароля
+			//console.log(admin + ' ' + pass);
+			var dbpass = (function () {
+				var res;
+				$.ajax({
+					url: 'php/admins/authorization2.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        async: false,
+			        data: {'authorization2': adminId},
+			        beforeSend: function () {},
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            res = response;
+			        }
+				});
+				return res;
+			})();
+			// console.log(dbpass);
+
+
+			if(pass.value === dbpass){
+				var date = new Date();
+				date.setHours(date.getHours() + 5); // setMinutes - минуты ; setHours - часы; getSeconds - секунды
+				document.cookie = "admin=true111; path=/; expires=" + date.toUTCString(); 
+				
+				$.ajax({
+					url: 'php/admins/workingDays.php',
+			        type: 'POST',
+			        dataType: 'json',
+			        async: false,
+			        data: {'admin': admin.value, 'adminId': adminId, 'date' : curentData},
+			        beforeSend: function () {console.log('ajax send'); 
+			        	console.log(admin.value);
+			        	console.log(adminId);
+			        	console.log(curentData);
+			    	},
+			        error: function (req, text, error) {
+			            console.log('Проблемма ' + text + error);
+			        },
+			        success: function (response) {
+			            //res = response;
+			        	console.log(response);
+			        	$('.authorizationPanel').slideUp(400);
+						mainPage();
+			        }
+				});
+			}
+			else {
+				pass.style.border = '1px solid red';
+			}
+		}
+	}
+
+
+		function mainPage() {
+			var mainPage = d.createElement('div');
+			var menu = '<a href="timetable.html">Расписание</a>\
+						<a href="patients.html">Пациенты</a>\
+						<a href="doctors.html">Доктора</a>\
+						<a href="admins.html">Админы</a>\
+						<a href="asystents.html">Асистенты</a>\
+						<a href="price.html">Услуги</a>\
+						<a href="costs.html">Затраты</a>\
+						<a href="technick.html">Техник</a>\
+						<a href="bank.html">Банк</a>\
+						<a href="notes.html">Заметки</a>\
+						<a href="report.html">Отчёт</a>';
+			mainPage.innerHTML = menu;
+			d.body.appendChild(mainPage);
+		}
+						// <a href="materials.html">Материалы</a>
+
+</script>
+
+</body>
+</html>

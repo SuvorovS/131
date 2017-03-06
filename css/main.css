@@ -1,0 +1,161 @@
+.login {
+  display: none;
+  background-color: pink;
+  height: 1000px; }
+  .login form {
+    background-color: grey;
+    display: block;
+    width: 200px;
+    margin: auto;
+    padding-top: 400px; }
+
+.main {
+  margin: auto;
+  background-color: #ccc;
+  overflow: hidden; }
+
+.tab {
+  display: inline-block;
+  margin: 0, 20px;
+  padding: 0, 15px;
+  border: solid 1px #0b6c83;
+  float: left;
+  font-size: 30px;
+  text-align: center;
+  line-height: 50px;
+  background-color: #333; }
+  .tab a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: antiquewhite; }
+    .tab a:hover {
+      color: #ffe199;
+      background-color: #0f2083; }
+
+
+html{height: 100%}
+
+body {min-height: 100%; background: #d4d1d1; position: relative; font-family: Verdana; margin: 0;
+  padding: 0}
+
+p {padding: 0; margin: 6px}
+
+.modal {position: absolute; background-color: #4d2422; z-index: 100;
+  opacity: 1; top: 0; left: 0; color: white; width: 100%; min-height: 100%}
+.modalVisit {position: absolute; background-color: #4d2422; z-index: 101;
+  opacity: 1; top: 0; left: 0; color: white; width: 100%; min-height: 100%}
+
+
+form {box-sizing: border-box; display: block; padding: 5px 10px; background: grey}
+.addVisitModal {display: none; width: 100%; height: 100%;
+  background: grey; position: absolute; top: 0; left: 0}
+#close, #closeAddVisitForm  {position: absolute; top: 0; right: 0; margin: 10px}
+/*#closeAddVisitForm {  }*/
+
+.nav {background: darkgrey; padding-bottom: 5px}
+.nav ul {margin: 0; padding: 0}
+.nav ul li {display: inline-block;}
+.nav ul li :hover {background: #3d3636}
+.nav ul li a {text-decoration: none; color: white; font-size: 20px}
+.active_menu {background: yellow; color: black  !important}
+
+.deleteExist {cursor: pointer}
+.deleteBtn {cursor: pointer}
+.deleteExist:hover {color: red}
+.deleteBtn:hover {color: red}
+select:hover {background: #80dcdc}
+.patient {background-color: #7ca5af; margin: 5px; cursor: pointer;}
+/*li {background-color: #7ca5af; margin: 5px; cursor: pointer;}*/
+
+.is-hidden {display: none}
+.inputLabel {display: inline-block; width: 120px}
+h3 {background-color: #7ca5af; margin: 5px; cursor: pointer}
+td {border: 1px solid black}
+#salayPanel{margin-top: 20px}
+.block {font-size: 20px; color: black; text-align: center; box-sizing: border-box; border: 1px solid white; background: #d8dcf8; float: left; width: 25%}
+.block-head {font-weight: 600; font-size: 20px; color: #1a3; margin: 0; text-align: center;}
+.avans_data {width: 50%; float: left; color: red}
+.avans_size {width: 50%; float: left; color: red}
+.calendar_doctor{box-sizing: border-box; width: 33%; background: #b78f8f; padding: 3px}
+#a1 {overflow: hidden; background: red}
+.calendar_doctor {float: left;}
+.doctor_name{font-size: 18px}
+.record {margin: 3px 0; padding: 2px; background: green}
+/*.record input {width: 260px}*/
+.span {display: inline-block; width: 60px}
+.restTime {background: #6da0d4}
+#patientData {position: relative;}
+.patientNote {height: 80%;
+    position: absolute;
+    top: 21px;
+    left: 284px;}
+
+.blinked {
+    animation-name: example;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes example {
+    0%   {background-color: pink;}
+    50% {background-color: green;}
+}
+.change {padding: 5px; margin-right: 10px}
+.save {padding: 5px}
+.ower {background: #d58787; color: white}
+#searchPacient {display: block; padding: 5px 10px; margin: 5px;
+  border: 1px solid grey; background: grey}
+
+#preloader {display: none; background: black; opacity: 0.5; position: fixed; top: 0; width: 100%; height: 100%;}
+
+#preloader img {display: block; position: absolute;top: 0; bottom: 0; left: 0; right: 0; margin: auto; }
+
+.note {box-sizing: border-box; padding-right: 10px; width: 50%; min-width: 580px; float: left; height: 600px; background: pink; color: black;}
+.note_inputs {height: 96%; overflow-y: scroll;}
+
+.note span {display: block;}
+.duty_list_item span {display: inline-block; min-width: 150px;}
+.duty_list_item span:hover {background: #7ca5af}
+.output_list_item {margin: 5px; background: #a3b2de}
+.output_list_item span {margin: 0 5px}
+.technik {position: absolute; top: 200px; left: 400px; padding-right: 5px;}
+.technik * {display: block;}
+.authorizationPanel {
+          width: 304px;
+          height: 100px;
+          margin: auto;
+          margin-top: 200px;
+          background: #c2c6e1;
+          border: 5px solid #485089;
+          border-radius: 17px;
+          line-height: 90px;
+          padding: 10px;
+      }
+      .authorizationPanel * {
+        display: block;
+        width: 100%;
+        float: left;
+        margin: 5px 0;
+      }
+.visit_form {width: 50%; min-width: 580px; float: left;}
+#modalVisitForm {width: 50%; min-width: 580px; float: left;}
+.new_therapy{overflow: hidden;}
+.price, .label {display: block; float: left;}
+.price {width: 100px}
+.label {width: 400px;}
+.therapy_count {width: 25px; margin-left: 5px }
+
+input:checked + label {background: red}
+
+.next_visit {
+    position: absolute;
+    top: 70px;
+    left: 350px;
+    padding-right: 5px;
+}
+.next_visit * {display: block;}
+.visit_main_div {overflow: hidden;}
+.sliding {display: none}
+.sanpaket {font-size: 20px; color: #a2fa5c;}
